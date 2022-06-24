@@ -26,7 +26,7 @@ Cel analizy:
 
 ## Pobieranie zestawu danych 
 Przy użyciu biblioteki opendatasets pobieramy dane żródłowe z platformy Kaggle
-Podczas pobierania danych wymagane jest wprowadzenie nazwy użytkownika i klucza Kaggle
+Podczas pobierania danych wymagane jest wprowadzenie nazwy użytkownika i wygenerowanego klucza Kaggle
 ```
 !pip install jovian opendatasets --upgrade --quiet
 import opendatasets as od
@@ -46,6 +46,8 @@ import numpy as np
 samochody_uzywane_csv = 'us-used-cars-dataset/used_cars_data.csv'
 samochody_uzywane_df = pd.read_csv(usedcars_csv,  low_memory=False, nrows=1000000)
 ```
+Pogląd załadowanych danych
+![image](https://user-images.githubusercontent.com/108089259/175470420-5804b9b6-8f21-47ad-8a04-e45a5a48ba4a.png)
 
 ### Wybranie kolumn do analizy oraz załadowanie 1.5 miliona wierszy z wybranymi kolumnami 
 Spośród 66 dostępnych kolumn wybieramy kolumny które zostaną wykorzystane podczas analizy danych, funkcja head() pozwala nam podglądnąć daną liczbę wierszy z zestawu danych co daje nam bezpośredni wgląd w strukturę danych.
@@ -101,12 +103,31 @@ probka_danych_finalowa=probka_danych_finalowa.drop_duplicates()
 
 ![image](https://user-images.githubusercontent.com/108089259/175408461-57753ea4-ec19-4b0a-b804-e4d359ada397.png)
 
+Dzięki sprawdzeniu możemy zauważyć że w 6 kolumnach brakuje nam danych. 
+Aby rozwiązać ten problem musimy zastosować którąś z odpowiednich technik dla każdej z kolumn.
+
 Sposoby procesowania niekompletnych danych.
 - Zostawienie brakujących danych bez zmian, jeśli nie wpłyną na naszą analizę
 - Zastąpienie brakujących danych średnią
 - Zastąpienie brakujących danych inną stałą wartością
 - Usunięcie wierszy niezawierających kompletu danych
 - Użycie wartości z innych wierszy i kolumn, aby oszacować brakujące wartości
+- 
+#### Czyszczenie kolumny "engine_cylinders"
+
+Zaczynamy od pierwszej kolumny "engine_cylinders"
+![image](https://user-images.githubusercontent.com/108089259/175472710-eeefdc46-a90b-4c71-8402-2707e0be0268.png)
+
+W tej sytuacji najlepszy podejściem będzie zamiana wartości None na stały tekst "Nieznany".
+Jako że chcemy zamienić wszystkie puste wartości i wartości None na stały tekst transformujemy puste stringi na wartości none po czym zamieniamy wszystkie wartości none na stały tekst 
+```
+probka_danych_finalowa = probka_danych_finalowa.replace(r'^\s+$', np.nan, regex=True)
+probka_danych_finalowa['engine_cylinders'] = probka_danych_finalowa['engine_cylinders'].fillna(value = 'Nieznany')
+```
+Po wykonaniu tych transformacji możemy sprawdzić że wartości None nie występują
+![image](https://user-images.githubusercontent.com/108089259/175473548-c49a5fd8-86f7-44ad-8f04-759ba53b195e.png)
+
+
 
 
 
