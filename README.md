@@ -141,7 +141,35 @@ Czyszczenie kolumny "horsepower" zaczynamy od wyszukania wartości None oraz spr
 
 ![image](https://user-images.githubusercontent.com/108089259/175487398-a1336d42-a3e1-4b10-ae7b-02606fad2fb4.png)
 
+Odchylenie standardowe nie jest bardzo duże wynosi ~88 co oznacza że możemy te dane zastąpić.
 W tej sytuacji najlepszym podejściem będzie zastąpienie brakujących danych średnimi wartościami między 200 a 300 
+
+```
+import random
+probka_danych_finalowa['horsepower'].fillna(random.uniform(200,300),inplace=True)
+```
+
+### Czyszczenie kolumny "maximum_seating"
+
+Wykazanie ilości brakujących danych, unikalnych wartości dla tej kolumny oraz sumy wystąpień zarejestrowanych miejsc w samochodzie.
+
+![image](https://user-images.githubusercontent.com/108089259/175500701-ab21d46a-3827-4675-80b0-64703661ebd6.png)
+
+Aby oczyścić te dane wykonujemy dwa kroki.
+1. Zamiana wartości None na "5 seats" jako że większość samochów prawie 70% ma 5 miejsc możemy zamienić wartości None na "5 seats" nie powinno to wpłynąć negatywnie na naszą analize.
+
+2. Kolejnym krokiem jest usunięcie wierszy zawierających wartość "--".
+
+```
+probka_danych_finalowa['maximum_seating'].fillna(value='5 seats', inplace=True)
+probka_danych_finalowa['maximum_seating'].unique()
+probka_danych_finalowa = probka_danych_finalowa[~probka_danych_finalowa['maximum_seating'].isin(['--'])]
+```
+
+3. Usunięcie niepotrzebnego stringu "seats" oraz konwersja tej kolumny do typu numerycznego co pomoże nam pózniej podczas próby analizy i wizualizacji naszych danych.
+
+
+
 
 
 
