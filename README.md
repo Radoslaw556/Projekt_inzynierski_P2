@@ -124,8 +124,27 @@ Jako że chcemy zamienić wszystkie puste wartości i wartości None na stały t
 probka_danych_finalowa = probka_danych_finalowa.replace(r'^\s+$', np.nan, regex=True)
 probka_danych_finalowa['engine_cylinders'] = probka_danych_finalowa['engine_cylinders'].fillna(value = 'Nieznany')
 ```
-Po wykonaniu tych transformacji możemy sprawdzić że wartości None nie występują
+Po wykonaniu tych transformacji możemy sprawdzić że wartości None już nie występują.
 ![image](https://user-images.githubusercontent.com/108089259/175473548-c49a5fd8-86f7-44ad-8f04-759ba53b195e.png)
+
+
+#### Czyszczenie kolumny "frame_damaged"
+
+Kolumna "frame_damaged" zwraca wartości true lub false w zależności od tego czy samochód jest uszkodzony.
+Ponawiamy kroki jak dla kolumny "engine_cylinders" wyszukujemy wartości None i zastępujemy je stałym stringiem "Nieznany".
+
+![image](https://user-images.githubusercontent.com/108089259/175486485-cea0fef5-1d09-4bb6-91f4-e5060de627e1.png)
+
+### Czyszczenie kolumny "horsepower" 
+
+Czyszczenie kolumny "horsepower" zaczynamy od wyszukania wartości None oraz sprawdzenia wartości dla tej kolumny przy użyciu funkcji describe()
+
+![image](https://user-images.githubusercontent.com/108089259/175487398-a1336d42-a3e1-4b10-ae7b-02606fad2fb4.png)
+
+W tej sytuacji najlepszym podejściem będzie zastąpienie brakujących danych średnimi wartościami między 200 a 300 
+
+
+
 
 
 
