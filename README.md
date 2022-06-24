@@ -112,7 +112,7 @@ Sposoby procesowania niekompletnych danych.
 - Zastąpienie brakujących danych inną stałą wartością
 - Usunięcie wierszy niezawierających kompletu danych
 - Użycie wartości z innych wierszy i kolumn, aby oszacować brakujące wartości
-- 
+
 #### Czyszczenie kolumny "engine_cylinders"
 
 Zaczynamy od pierwszej kolumny "engine_cylinders"
@@ -166,10 +166,55 @@ probka_danych_finalowa['maximum_seating'].unique()
 probka_danych_finalowa = probka_danych_finalowa[~probka_danych_finalowa['maximum_seating'].isin(['--'])]
 ```
 
-3. Usunięcie niepotrzebnego stringu "seats" oraz konwersja tej kolumny do typu numerycznego co pomoże nam pózniej podczas próby analizy i wizualizacji naszych danych.
+![image](https://user-images.githubusercontent.com/108089259/175552632-79f74c3c-3e66-43cb-883d-9985d92a6028.png)
 
 
+3. Usunięcie niepotrzebnego tekstu "seats" z kolumny oraz konwersja tej kolumny do typu numerycznego co pomoże nam pózniej podczas próby analizy i wizualizacji naszych danych.
 
+```
+def num(value):
+  return value.split()[0]
+  
+probka_danych_finalowa['maximum_seating'].astype(str)
+probka_danych_finalowa['maximum_seating'] = probka_danych_finalowa['maximum_seating'].apply(num)
+probka_danych_finalowa['maximum_seating'] = probka_danych_finalowa['maximum_seating'].astype(np.int32)
+```
+Wynik po konwersji kolumny 
+
+![image](https://user-images.githubusercontent.com/108089259/175553084-1366d9db-5048-4dba-8e68-5cf6a2f71270.png)
+
+
+### Czyszczenie kolumny "seller_rating"
+
+Usuwamy wszystkie wiersze zawierające wartość None
+
+```
+a = probka_danych_finalowa['seller_rating'].isnull()
+probka_danych_finalowa = probka_danych_finalowa[~a]
+```
+
+### Czyszczenie kolumny "wheel_system"
+
+Ponawiamy proces jak dla kolumny "seller_rating".
+
+![image](https://user-images.githubusercontent.com/108089259/175566415-4a445031-8c4f-44f6-ab53-2509c35b2a60.png)
+
+
+```
+probka_danych_finalowa = probka_danych_finalowa[probka_danych_finalowa['wheel_system'].isin(['AWD', 'FWD', '4WD', 'RWD', '4X2'])]
+```
+
+## Efekt czyszczenia kolumn
+
+![image](https://user-images.githubusercontent.com/108089259/175566986-af84e42b-f22a-4734-89cd-5fa20d5c184e.png)
+
+![image](https://user-images.githubusercontent.com/108089259/175567035-1a875320-e5ab-4fbe-acc0-e0f776e51c98.png)
+
+### Szlifowanie danych i zapis wersji finałowej
+
+Proces resetu indeksu oraz wpisania finalnej wersji do pliku csv "wersja_finalowa.csv".
+
+![image](https://user-images.githubusercontent.com/108089259/175567469-dc5baf51-c275-4644-99f1-6c19b932089d.png)
 
 
 
