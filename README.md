@@ -216,6 +216,35 @@ Proces resetu indeksu oraz wpisania finalnej wersji do pliku csv "wersja_finalow
 
 ![image](https://user-images.githubusercontent.com/108089259/175567469-dc5baf51-c275-4644-99f1-6c19b932089d.png)
 
+## Analiza oraz wizualizacja zbioru danych 
+
+### Zaczytanie finalnej wersji pliku oraz usunięcie kolumny "Unnamed"
+
+Usuwamy kolumne "Unnamed" powstałą przy czytaniu data frame z pliku .csv przy użyciu biblioteki pandas.
+```
+df= pd.read_csv('wersja_finalowa.csv', low_memory = False)
+df.drop('Unnamed: 0',axis=1,inplace=True)
+```
+Import odpowiednich bibliotek do wizualizacji danych oraz dostosowanie wyglądu.
+```
+import seaborn as sns
+import matplotlib
+import matplotlib.pyplot as plt
+import plotly.express as px
+%matplotlib inline
+
+sns.set_style('darkgrid')
+matplotlib.rcParams['font.size'] = 14
+matplotlib.rcParams['figure.figsize'] = (9, 5)
+matplotlib.rcParams['figure.facecolor'] = '#00000000'
+```
+
+Wygląd oczyszcznego data frame.
+
+![image](https://user-images.githubusercontent.com/108089259/175571387-664f0932-fb2f-4196-88fe-5c59eb575fd4.png)
+
+
+
 
 
 
