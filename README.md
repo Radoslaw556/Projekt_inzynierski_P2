@@ -243,13 +243,207 @@ Wygląd oczyszcznego data frame.
 
 ![image](https://user-images.githubusercontent.com/108089259/175571387-664f0932-fb2f-4196-88fe-5c59eb575fd4.png)
 
+Opis danych staystycznych utworzonego zbioru danych.
+
+```
+oczyszczony_data_frame.describe().round(3)
+```
+
+
+Analiza kolumn liczbowych i ich statystyk w naszym zbiorze danych.
+
+
+![image](https://user-images.githubusercontent.com/108089259/177625556-03b8fd61-0014-412c-a49e-922e2befa60c.png)
+
+
+## Wizualizacja danych 
+
+### Ilość dni które samochody spędzają na sprzedaży 
+
+```
+fig = px.histogram(oczyszczony_data_frame, x="Dni na rynku", marginal="box", title='Ilość dni na rynku samochodów używanych')
+fig.update_layout(yaxis_title = 'Liczba samochodów')
+fig.show()
+```
+
+Wizualizacja kolumny `daysonmarket`, która podaje nam liczbę dni, przez które używany samochód pozostaje na rynku
+
+![image](https://user-images.githubusercontent.com/108089259/177626325-2c6ddabc-1f9f-4b65-b36d-52ed8ed08300.png)
+
+
+Dni na rynku: Tutaj widzimy, że samochód pozostaje na rynku średnio przez około 1-2 miesiące przed sprzedażą. Niektóre samochody sprzedają się w ciągu jednego dnia, ale niektóre mogą również sprzedawać się dużo dłużej.
+Widać wyraźnie, że jest to wartość odstająca, a 75% samochodów jest sprzedawanych w ciągu 80 dni od wejścia na rynek, przy medianie 35 dni.
+
+### Maksymalna liczby siedzeń, którą mają samochody używane
+
+Tutaj tworzymy wykres słupkowy za pomocą matplotlib.
+
+
+```
+maksymalna_liczba_miejsc_w_samochodzie = oczyszczony_data_frame['maximum_seating'].value_counts()
+maksymalna_liczba_miejsc_w_samochodzie.plot.bar()
+plt.title("Maksymalna liczba zarejestrowanych miejsc siedzących w samochodach używanych");
+plt.xlabel("Maksymalna liczba zarejestrowanych miejsc siedzących");
+plt.ylabel("Liczba samochodów");
+```
+
+![image](https://user-images.githubusercontent.com/108089259/177652528-2e9b99a1-f03f-4a11-a8f3-6442966b3d6c.png)
+
+Wyraźnie widać, że większość samochodów to samochody 5-osobowe, następnie 7, a następnie 6-osobowe.
+
+### Systemy napędowe samochodów używanych
+
+```
+system_napedowy = oczyszczony_data_frame['wheel_system'].value_counts()
+system_napedowy.plot.pie(autopct='%1.2f%%',radius=1.8,figsize=(5,5),startangle=180);
+plt.title('SYSTEM NAPĘDOWY W SAMOCHODACH UŻYWANYCH', y= 1.3);
+```
+
+![image](https://user-images.githubusercontent.com/108089259/177652697-5b70710b-7eab-4f83-a425-fb02f3941415.png)
+
+
+Mamy 5 rodzajów napędów na koła, z których większość samochodów to napęd na przednie koła, następnie automatyczny, a następnie 4WD.
+
+### Rozkład cen używanych samochodów w USA
+
+```
+fig = px.histogram(oczyszczony_data_frame, x="price", marginal="box", title='Cena sprzedaży samochodów używanych')
+fig.update_layout(yaxis_title = 'Liczba samochodów')
+```
+
+![image](https://user-images.githubusercontent.com/108089259/177653046-6945ca29-a36f-4edf-8d20-84ffa77bf485.png)
+
+Jak widać, większość samochodów jest wyceniana na mniej niż 75 tys. USD, więc przyjrzyjmy się teraz uważnie rozkładowi cen w tym przedziale z wyłączeniem wartości odstających.
+
+```
+oczyszczony_data_frame['price'].sort_values(ascending = True).iloc[1300000]
+a = oczyszczony_data_frame['price'].sort_values(ascending = True).iloc[:1300000]
+df = pd.DataFrame(a)
+fig = px.histogram(df, x="price", marginal="box", title='Cena sprzedaży większości sprzedanych aut używanych')
+fig.update_layout(yaxis_title = 'Liczba samochodów')
+```
+
+![image](https://user-images.githubusercontent.com/108089259/177653229-996cade6-599c-445e-9f24-c6956ba7866d.png)
+
+Jak widać o wiele lepiej teraz, że większość samochodów jest wyceniana w granicach 18-25 tys. USD, gdzie średnia cena nowego samochodu zawsze wynosi około 38 tys. USD za lekki pojazd silnikowy według danych „Statista 2021”.
+
+Tak więc kupno używanego samochodu może być bardzo korzystną i mądrą decyzją!
+
+### Ocena sprzedawców samochodów 
+
+```
+sns.set_theme(style="ticks");
+fig = sns.boxplot(x=oczyszczony_data_frame['seller_rating']);
+fig.set(xlabel='Seller Ratings')
+plt.title("Ocena sprzedawców samochodów używanych");
+plt.show();
+```
 
 
 
+![image](https://user-images.githubusercontent.com/108089259/177653485-01b47aa3-d216-43df-9a21-ace89022f576.png)
+
+Jak widać, mediana ocen sprzedawców w USA wynosi około 4,4, a 75% sprzedawców ma ocenę powyżej 4,6.
+
+To pokazuje nam, że sprzedawcy wykonują całkiem dobrą robotę, jeśli chodzi o zadowolenie klienta, czy to sprzedawca samochodu, czy kupujący. Obie strony ogólnie oceniają sprzedawców dość wysoko, co jest niezwykłe dla tych sprzedawców, biorąc pod uwagę, jak konkurencyjna i techniczna jest domena.
+
+## Analiza pytań o rynku samochodów używanych w USA 
+
+### Zależność ceny samochodu w zależności od jego mocy
+
+```
+px.scatter(oczyszczony_data_frame,x='horsepower',y='price',title='Cena względem mocy samochodu')
+```
 
 
+![image](https://user-images.githubusercontent.com/108089259/177655173-b88e9afe-c7f7-4def-ba38-cefe01210bba.png)
+
+Jak widać, nie ma bezpośredniej ani proporcjonalnej relacji między ceną a mocą samochodu, co oznacza, że muszą istnieć inne czynniki, które odgrywają kluczową rolę w decydowaniu o cenie samochodu używanego, a nie jego moc.
+
+### Które marki są najczęściej sprzedawane na rynku wtórnym?
+
+```
+df = oczyszczony_data_frame[['make_name']]
+df = df.make_name.value_counts().head(30).sort_values(ascending = True)
+df = pd.DataFrame(df)
+df.plot(kind='barh',figsize=(15,10),title='Liczba samochodów względem marki na rynku samochodów używanych ',xlabel='Nazwa marki',ylabel='Liczba samochodów');
+```
+
+![image](https://user-images.githubusercontent.com/108089259/177655502-73d0349f-90ec-473d-9a45-3bdb8314b8cc.png)
+
+Jak widzimy, niektóre marki, takie jak Ford, Chevrolet, Toyota, zdecydowanie mają dużą liczbę sprzedawanych samochodów na rynku, a marki luksusowe, takie jak Janguar, Mini, Porsche itp., mają bardzo ograniczoną liczbę samochodów na rynku wtórnym. Może to wynikać z różnych powodów, takich jak:
+
+1. Liczba samochodów luksusowych jest bardzo ograniczona w porównaniu z innymi samochodami na drogach, dlatego też liczba samochodów na rynku wtórnym jest ograniczona.
+2. Osoby kupujące luksusowe samochody nie sprzedają ich tak dużo, jak zwykli nabywcy samochodów. W przeciwieństwie do zwykłych nabywców z klasy średniej mogą mieć przy sobie więcej niż jeden samochód, a tym samym nie wprowadzać swoich samochodów na rynek wtórny.
+3. Jakość samochodów luksusowych jest taka, że użytkownicy mają tendencję do używania ich przez dłuższy czas w porównaniu ze zwykłym samochodem.
+
+### Które miasta są najbardziej aktywne na rynku samochodów używanych?
 
 
+```
+df = oczyszczony_data_frame[['city','price']]
+df1 = df.groupby('city')[['price']].count().sort_values('price',ascending= False) 
+df2 = df1.head(30).sort_values('price',ascending=True);
+df2.plot(kind='barh',legend=False,xlabel='City',ylabel='Liczba samochodów na sprzedarz', title='Top 30 miast z największą ilością samochodów używanych na sprzedaż',figsize=(13,8));
+``` 
+
+![image](https://user-images.githubusercontent.com/108089259/177656040-a44f9648-ac8b-4826-bbd0-b2a1933a0452.png)
+
+Jak widać, rozkład liczby samochodów pomiędzy miastami jest dobry.
+
+Tutaj właśnie zwizualizowaliśmy 30 najlepszych miast, ale podążając za trendem, możemy być pewni, że na rynku samochodów używanych jest wiele miast z pokaźną liczbą samochodów.
+
+### Czy sezonowość ma wpływ na ceny samochodów? W jakich miesiącach widzimy najwyższe i najniższe ceny auta używanego?
+
+```
+oczyszczony_data_frame['year']=oczyszczony_data_frame['listed_date'].dt.year
+oczyszczony_data_frame['month']=oczyszczony_data_frame['listed_date'].dt.month
+df1 = oczyszczony_data_frame.sort_values(by='price', ascending= True)
+df1 = df1.iloc[:1300000]
+df2 = df1.groupby(['year','month'])['price'].median()
+df3 = df2.reset_index()
+df4 = df3.pivot('year','month','price')
+plt.figure(figsize = (16,8))
+sns.heatmap(df4,fmt="d",cmap='Greens');
+``` 
+
+![image](https://user-images.githubusercontent.com/108089259/177656187-c6d3894c-3558-4fd4-8742-c57ca3bca825.png)
+
+Tutaj widzimy, że ceny rosły na przestrzeni lat ze względu na inflację lub z innych powodów, podobnie jak ceny nowych samochodów rosną z biegiem lat. Nie ma dużej różnicy między cenami samochodów sprzedawanych w różnych miesiącach, a cena rozkłada się niemal równomiernie. Można więc śmiało powiedzieć, że sezonowość nie odgrywa kluczowej roli w sprzedaży lub kupnie używanego samochodu.
+
+### Ile osób kupuje lub sprzedaje samochód powypadkowy?
+
+![image](https://user-images.githubusercontent.com/108089259/177656381-0d33bf76-5bbd-4bf8-9812-65d005c90dcd.png)
+
+![image](https://user-images.githubusercontent.com/108089259/177656464-f28ff325-e43a-48b2-bd89-cbafdfd4efee.png)
+
+To dość zaskakujące, ponieważ codziennie widzimy na ulicy liczne samochody z wgnieceniami i rysami. Jednak to, co widzimy tutaj, jest zupełnie inne, ponieważ 99% samochodów na rynku używanych nie podaje informacji o uszkodzeniach.
+
+Powodem tego może być to, że gdy ktoś idzie sprzedać lub kupić używany samochód, obie strony zapewniają, że nie ma fizycznych uszkodzeń pojazdu, ponieważ nie jest to pożądane dla żadnej z zaangażowanych stron, a zatem 99% sprzedawane samochody nie są fizycznie uszkodzone!
+
+### tóre marki są najbardziej poszukiwane na rynku samochodów używanych?
+
+```
+df = oczyszczony_data_frame.groupby('make_name')['daysonmarket'].median().sort_values(ascending=True)
+df.plot(kind='bar',figsize=(22,10),title='Czas sprzedaży samochodu danej marki',xlabel='Brands',ylabel='Number of Days');
+```
+
+![image](https://user-images.githubusercontent.com/108089259/177656679-7d273298-dc3f-4889-9a10-0c8450d0ef36.png)
 
 
+Możemy to przeanalizować, przyglądając się, ile dni potrzeba, aby używany samochód danej marki został sprzedany lub kupiony ogólnie na rynku.
+
+Jak widać, większość marek jest na rynku sprzedawana przez podobny czas. Jednak niektóre marki, takie jak Daewood, Karma, Maybach, Aston Martin, utrzymują się na rynku dość długo.
+
+Może to wynikać z wielu czynników:
+a. Samochody w próbie nie były w najlepszym stanie, aby były pożądane przez innego użytkownika.
+
+b. Samochody takie jak Rolls Royce są jedyne w swoim rodzaju i dlatego osoby zainteresowane kupnem takiego auta wolałyby nowy zamiast używanego, ponieważ jest to bardziej symbol statusu dla ludzi niż tylko samochód.
+
+Jednocześnie mamy takie marki jak Subaru, Toyota, Mazda, Chevrolet, Lexus, GMC, Toyota, które dość szybko poruszają się na rynku.
+Przyczyny mogą być następujące:
+
+a. Większość ludzi kupuje i sprzedaje te samochody, stąd liczba samochodów dostępnych na rynku jest ogromna i szybko się poruszają.
+
+b. Marki te oferują ekonomiczne samochody dla ludzi, dzięki czemu wartość odsprzedaży staje się znacznie tańsza dla użytkownika. Powoduje to, że wiele osób kupuje te samochody w porównaniu do drogich.
 
